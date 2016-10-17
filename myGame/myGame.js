@@ -6,16 +6,18 @@ function preload() {
     
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
-    game.load.image('star', 'assets/star.png');
+    game.load.image('diamond', 'assets/diamond.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     game.load.spritesheet('baddie', 'assets/baddie.png', 32, 48);
+    game.load.image('red', 'assets/red.png');
+
 }
 
 function create() {
     
     game.physics.startSystem(Phaser.Physics.ARCADE);
     
-    game.add.sprite(0, 0, 'star');
+    game.add.sprite(0, 0, 'diamond');
     
     game.add.sprite(0, 0, 'sky');
     
@@ -29,15 +31,36 @@ function create() {
     
     ground.body.immovable = true;
     
-    var ledge = platforms.create(-200, 400, 'ground');
+    var ledge = platforms.create(-200, 300, 'ground');
     
     ledge.body.immovable = true;
     
-    var ledge = platforms.create(500, 150, 'ground');
+    var ledge = platforms.create(600, 150, 'ground');
+    
+    ledge.body.immovable = true;
+
+    var ledge = platforms.create(600, 400, 'ground');
     
     ledge.body.immovable = true;
     
-    player = game.add.sprite(32, game.world.height - 150, 'dude');
+    var ledge = platforms.create(200, 500, 'ground');
+    
+    ledge.body.immovable = false;
+
+    red = game.add.group();
+    
+    red.enableBody = true;
+
+    var ledg = red.create(200, 250, 'red')
+    
+    ledg.body.immovable = false;
+
+    
+    player = game.add.sprite(32, game.world.height -150, 'dude');
+    
+    bad = game.add.sprite(300, game.world.height -95, 'baddie');
+    
+
   
     game.physics.arcade.enable(player);
   
@@ -54,21 +77,27 @@ function create() {
    
     cursors = game.input.keyboard.createCursorKeys();
    
-    stars = game.add.group();
+    diamonds = game.add.group();
     
-    stars.enableBody = true;
+    diamonds.enableBody = true;
     
-    for (var i = 0; i < 12; i++)
+    for (var i = 0; i < 1000; i++)
     {
-        var star = stars.create(i * 70, 0, 'star');
+        var diamond = diamonds.create(i * 70, 0, 'diamond');
         
-        star.body.gravity.y = 6;
+        diamond.body.gravity.y = 6;
         
-        star.body.bounce.y = 0.7 + Math.random() * 0.2;
+        diamond.body.bounce.y = 0.7 + Math.random() * 0.2;
     }
-    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000'});
+    scoreText = game.add.text(16, 16, '$$DIAMONDS$$: 0', { fontSize: '32px', fill: '#000'});
 
     score = 0;
+    
+    livesText = game.add.text(16, 40, 'Lives: 3', { fontSize: '32px', fill: '#000'});
+    
+    lives = 3
+    
+    byJoey = game.add.text(300, 250, 'Diamond Run', { fontSize: '50px', fill: '#000'});
 }
 
 
@@ -101,9 +130,9 @@ function update() {
         player.body.velocity.y = -350;
     }
 
-    game.physics.arcade.collide(stars, platforms);
+    game.physics.arcade.collide(diamonds, platforms);
 
-    game.physics.arcade.overlap(player, stars, collectStar, null, this)
+    game.physics.arcade.overlap(player, diamonds, collectStar, null, this)
     
     
 }
@@ -111,8 +140,8 @@ function update() {
 function collectStar (player, star){
     
     star.kill();
-    score += 5;
-    scoreText.text = 'Score: ' + score;
+    score += 1;
+    scoreText.text = '$$DIAMONDS$$: ' + score;
 
 }
 
@@ -123,10 +152,20 @@ var player;
 
 var cursors;
 
-var stars;
+var diamonds;
 
 var play;
 
 var scoreText;
 
 var score;
+
+var bad;
+
+var lives;
+
+var livesText;
+
+var byJoey
+
+var red
