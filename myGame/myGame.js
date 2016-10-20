@@ -9,7 +9,7 @@ function preload() {
     game.load.image('diamond', 'assets/diamond.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     game.load.spritesheet('baddie', 'assets/baddie.png', 32, 48);
-    game.load.image('red', 'assets/red.png');
+    game.load.image('firstaid', 'assets/firstaid.png');
 
 }
 
@@ -46,15 +46,6 @@ function create() {
     var ledge = platforms.create(200, 500, 'ground');
     
     ledge.body.immovable = false;
-
-    red = game.add.group();
-    
-    red.enableBody = true;
-
-    var ledg = red.create(200, 250, 'red')
-    
-    ledg.body.immovable = false;
-
     
     player = game.add.sprite(32, game.world.height -150, 'dude');
     
@@ -66,7 +57,7 @@ function create() {
   
     player.body.bounce.y =  0.3;
   
-    player.body.gravity.y = 100;
+    player.body.gravity.y = 200;
   
     player.body.collideWorldBounds = true;
   
@@ -81,7 +72,7 @@ function create() {
     
     diamonds.enableBody = true;
     
-    for (var i = 0; i < 1000; i++)
+    for (var i = 0; i < 12; i++)
     {
         var diamond = diamonds.create(i * 70, 0, 'diamond');
         
@@ -100,8 +91,27 @@ function create() {
     byJoey = game.add.text(300, 250, 'Diamond Run', { fontSize: '50px', fill: '#000'});
 }
 
+var timer = 0;
 
 function update() {
+    
+    timer++;
+    
+    firstaid = game.add.sprite(32, game.world.height -150, 'firstaid')
+    
+    if(timer > 300){
+            for (var i = 0; i < 12; i++)
+    {
+        var diamond = diamonds.create(i * 70, 0, 'diamond');
+        
+        diamond.body.gravity.y = 6;
+        
+        diamond.body.bounce.y = 0.7 + Math.random() * 0.2;
+    }
+    timer = 0;
+    }
+    
+
 
     var hitPlatform = game.physics.arcade.collide(player, platforms);
   
@@ -132,7 +142,7 @@ function update() {
 
     game.physics.arcade.collide(diamonds, platforms);
 
-    game.physics.arcade.overlap(player, diamonds, collectStar, null, this)
+    game.physics.arcade.overlap(player, diamonds, collectStar, null, this);
     
     
 }
@@ -145,6 +155,12 @@ function collectStar (player, star){
 
 }
 
+function collectFirstaid (player, firstaid){
+    
+    firstaid.kill();
+    lives += 1;
+    livesText.text = 'Lives:' + lives;
+}
 
 var platforms;
 
@@ -166,6 +182,6 @@ var lives;
 
 var livesText;
 
-var byJoey
+var byJoey;
 
-var red
+var firstaid
